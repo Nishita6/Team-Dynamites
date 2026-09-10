@@ -2,7 +2,7 @@
 
 A voice assistant for a hands-busy mechatronics lab technician: ask a
 hardware spec question out loud, get a spoken answer grounded in a real
-database -- and interrupt it mid-answer without it losing the thread.
+database - and interrupt it mid-answer without it losing the thread.
 
 The hard voice-engineering problem this project is scoped around:
 **interruption & recovery, combined with conversation continuity during tool
@@ -19,7 +19,7 @@ python seed_demo_db.py       # seeds sensors/actuators demo tables
 python generate_fallback_audio.py   # pre-caches the offline fallback apology clip
 
 # reproducible, no mic needed:
-python ../evidence/stress_test.py --n 10
+python ../evidence/stress_test.py -n 10
 
 # once RIME_* / DEEPGRAM_API_KEY / LIVEKIT_* are filled in .env, calibrate
 # the truncation constant against the exact voice used in the demo:
@@ -51,7 +51,7 @@ Mic (hands-busy user)
          words actually heard; conversation history is sliced to exactly
          that point and tagged [interrupted]
        - the orchestrator keeps accepting new user turns while Rime is
-         speaking and while sql_rag_chain.py is still running -- that's the
+         speaking and while sql_rag_chain.py is still running - that's the
          part generation-ID fencing exists to make safe
   -> LLM: turn reasoning, SQL generation, answer formatting (never reasons
      over unplayed/dropped content)
@@ -93,7 +93,7 @@ own file there.
 ## 3. Third-party services
 
 | Service | Role |
-|---|---|
+|--|--|
 | LiveKit Agents | WebRTC transport, VAD, turn handling, barge-in detection |
 | Deepgram | Speech-to-text |
 | Rime | Text-to-speech (via LiveKit's official Rime plugin) |
@@ -102,17 +102,17 @@ own file there.
 | Firebase Firestore | Telemetry: `fenced_drop` events, `active_speech_provider`, turn/stress-test events |
 | Next.js (`dashboard/`) | Live telemetry view backed by Firestore |
 
-**Exact Rime configuration used in the recorded demo** (architecture §3 --
+**Exact Rime configuration used in the recorded demo** (architecture §3 -
 must match `.env` and pass organizer preflight; fill in after pulling live
 values from Rime's catalog and testing end-to-end):
 
 | Field | Value |
-|---|---|
-| Model ID | *TODO -- see `RIME_MODEL_ID` in `.env`* |
-| Speaker | *TODO -- see `RIME_SPEAKER` in `.env`* |
-| Language | *TODO -- see `RIME_LANGUAGE` in `.env`* |
-| Endpoint / region | *TODO -- see `RIME_ENDPOINT` in `.env`* |
-| Audio format | *TODO -- see `RIME_AUDIO_FORMAT` in `.env`* |
+|--|--|
+| Model ID | *TODO - see `RIME_MODEL_ID` in `.env`* |
+| Speaker | *TODO - see `RIME_SPEAKER` in `.env`* |
+| Language | *TODO - see `RIME_LANGUAGE` in `.env`* |
+| Endpoint / region | *TODO - see `RIME_ENDPOINT` in `.env`* |
+| Audio format | *TODO - see `RIME_AUDIO_FORMAT` in `.env`* |
 | Transport | LiveKit Agents (WebRTC) via the official Rime LiveKit plugin |
 
 ## 4. Known limitations
@@ -121,7 +121,7 @@ values from Rime's catalog and testing end-to-end):
   roughly constant word-rate within an utterance; it doesn't yet account for
   SSML pauses or punctuation-driven pacing.
 - SQL-RAG's allow-list (`config.ALLOWED_TABLES`) covers only `sensors` and
-  `actuators`. Extending the schema means updating that list -- a real
+  `actuators`. Extending the schema means updating that list - a real
   scaling constraint, not just a demo shortcut.
 - `evidence/stress_test.py`'s default run is non-mic (drives the orchestrator
   directly) for speed and reproducibility; a live-mic confirmation pass is
@@ -129,12 +129,12 @@ values from Rime's catalog and testing end-to-end):
 - The fallback TTS path has only been reviewed at the code level, not yet
   exercised against a real Rime outage (see `evidence/RIME_EVIDENCE.md`).
 - P1 (vector RAG over manuals) and P2 (reservation/checkout) are not part of
-  this build unless explicitly added later -- see architecture §8-9.
+  this build unless explicitly added later - see architecture §8-9.
 
 ## 5. Failure behavior
 
 - **SQL-RAG failure** (`UnsafeSQLError` or a DB error): the agent says so
-  aloud (`FAILURE_SPEECH` in `backend/livekit_agent.py`) -- it never stays
+  aloud (`FAILURE_SPEECH` in `backend/livekit_agent.py`) - it never stays
   silent and never guesses at a hardware spec.
 - **Rime unreachable**: `backend/fallback_tts.py` plays a pre-cached local
   apology clip (generated once by `generate_fallback_audio.py`) by
@@ -149,5 +149,5 @@ values from Rime's catalog and testing end-to-end):
 
 ## 6. Exact Rime model, speaker, language, endpoint, audio format, transport
 
-See the table in §3 above -- kept there rather than duplicated so it can't
+See the table in §3 above - kept there rather than duplicated so it can't
 drift out of sync.
